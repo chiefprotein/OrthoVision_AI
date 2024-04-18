@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html style="height:100%;  background-image:linear-gradient(135deg,rgb(244, 234, 238),rgb(226, 77, 136));">
@@ -127,6 +128,21 @@
     #Signup:hover {
         transform: scale(1.2);
     }
+    .messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 32%;
+    margin-top: 10px;
+    }
+
+    .error {
+        color: red;
+    }
+
+    .success {
+        color: green;
+    }
 
 </style>
 <body>
@@ -163,13 +179,29 @@
                     <div><h1 style="font-size: xx-large; margin-left: 33%; color: #fbfdfb; margin-top: 0px; padding-top: 25px;">Ortho Vision AI</h1></div>
                 </div>  
                 <h3 style="font-size: x-large; margin-left: 11%; margin-top: 90px; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; color: #070e07;">SIGN UP</h3>
-                <form action="#" methods="get">
-                    <input id="tbox" placeholder="Email" name="Email" type="text" required><br>
-                    <input id="tbox" placeholder="Username" name="Username" type="text" required><br>
-                    <input id="tbox" placeholder="Password" name="Password" type="password" required><br>
-                    <input id="tbox" placeholder="Confirm Password" name="Confirm Password" type="password" required><br>
-                    <input name="Signup" type="submit" class="button" id="Signup" value="SIGN UP" onclick="redirect()">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input id="tbox" placeholder="Email" name="email" type="text" required><br>
+                    <input id="tbox" placeholder="Username" name="username" type="text" required><br>
+                    <input id="tbox" placeholder="Password" name="password" type="password" required><br>
+                    <input id="tbox" placeholder="Confirm Password" name="confirm_password" type="password" required><br>
+                    <input name="Signup" type="submit" class="button" id="Signup" value="SIGN UP">
                 </form>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                                <li class="error">{{ message }}</li>
+                            {% elif message.tags == 'success' %}
+                                <li class="success">{{ message }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div style="margin-left: 10%; margin-top: 10px;">
+                    <span style="font-size: 18px; color: #333;">Already a user? </span>
+                    <a href="{% url 'login' %}" class="button1" id="Signup">Login here</a>
+                </div>
                 <div style="background-image: url(21.png); height: 80px; border-radius: 0px 0px 15px 0px;"></div>
             </div>
         </div>
