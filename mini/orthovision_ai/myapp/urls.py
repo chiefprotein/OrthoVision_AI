@@ -8,6 +8,7 @@ urlpatterns = [
     path('signup/',views.signup,name="signup"),
     path('upload/',views.upload,name="upload"),
     path('success/',views.success,name="success"),
+    path('fail/',views.success,name="fail"),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,

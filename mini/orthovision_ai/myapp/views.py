@@ -6,6 +6,11 @@ from django.http import HttpResponse
 from .forms import XrayImgForm
 from .models import XrayImages
 from django.db import IntegrityError
+import requests
+from inference_sdk import InferenceHTTPClient
+import base64
+fracture_list = ["Elbow ", "Finger ", "Forearm ", "Humerus", "Shoulder ", "Wrist "]
+
 def Login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -45,16 +50,60 @@ def upload(request):
  
     if request.method == 'POST':
         form = XrayImgForm(request.POST, request.FILES)
- 
+
         if form.is_valid():
-            form.save()
-            return redirect('success')
+            uploaded_image = form.save()
+
+            # Read the image file as binary data
+            with open(uploaded_image.img.path, "rb") as img_file:
+                image_data = img_file.read()
+
+            # Encode the binary data as base64
+            base64_image = base64.b64encode(image_data).decode('utf-8')
+            
+            # Construct the URL for Roboflow API
+            roboflow_url = "https://detect.roboflow.com/sleep-oqgis/2"
+
+            # Construct the query parameters dictionary
+            api_key = "pMkpzggFKSNgKPAKIxhz"
+            params = {
+                "api_key": api_key,
+                "format": "json"
+            }
+            params1 = {
+                "api_key": api_key,
+                "format": "image"
+            }
+            headers = {
+                "Content-Type": "application/json"
+            }
+            # Make the request to Roboflow API
+            response = requests.post(roboflow_url, params=params, data=base64_image,headers=headers)
+            t=[]
+            t=response.json()['predictions']
+            if t==[]:
+                print("no fracture")
+                return fail(request)
+            else:
+                tup=t[0]
+                a,b,c,d,e,f,g,h= tup.values()
+            f=int(f)
+            response1 = requests.post(roboflow_url, params=params1, data=base64_image,headers=headers)
+            if response1.status_code == 200:
+                return success(request, response1,fracture_list[f])
+            else:
+                form = XrayImgForm()
     else:
         form = XrayImgForm()
     context = {'form': form}
     return render(request, 'myapp/Upload.html', context)
  
- 
-def success(request):
+def success(request,response,f):
+    image_data = response.content
+    image_data_base64 = base64.b64encode(image_data).decode('utf-8')
+    image_src = f"data:image/jpeg;base64,{image_data_base64}"
+    return render(request, 'myapp/success.html', {'image_src': image_src,'f': f})
+
+def fail(request):
     last_uploaded_image = XrayImages.objects.last()
-    return render(request, 'myapp/success.html', {'success': last_uploaded_image})
+    return render(request, 'myapp/fail.html', {'fail': last_uploaded_image})

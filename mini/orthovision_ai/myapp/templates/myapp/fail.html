@@ -140,15 +140,15 @@
     </div>
 
     <div class="main">
-        <h1 style="margin-top:35px;text-align: center;">{{ f }} fracture detected</h1><br>
+        <h1 style="margin-top:35px;text-align: center;">No fracture detected by the model</h1><br>
         <div style="text-align: center;">
 
-          </div>
+        </div>
         <!-- Align Choose File and Upload buttons -->
         <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
             <div style="position: relative; display: inline-block; overflow: hidden; margin-bottom: 20px;">
                 <div style="text-align: center;">
-                    <img src=" {{ image_src }}" class="img-responsive" style="max-width: 100%; max-height: 100vh; margin: auto; display: block;" />
+                    <img src="{{ fail.img.url }}" class="img-responsive" style="max-width: 100%; max-height: 100vh; margin: auto; display: block;" />
                 </div>
             </div>
             
