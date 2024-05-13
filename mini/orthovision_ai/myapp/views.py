@@ -4,13 +4,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse
 from .forms import XrayImgForm
-from .models import XrayImages
+from .models import *
 from django.db import IntegrityError
 import requests
-from inference_sdk import InferenceHTTPClient
 import base64
-fracture_list = ["Elbow ", "Finger ", "Forearm ", "Humerus", "Shoulder ", "Wrist "]
-
+fracture_list = ["Elbow", "Finger", "Forearm", "Humerus", "Shoulder", "Wrist"]
+ftype = ""
 def Login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -47,7 +46,7 @@ def signup(request):
                 storage.used = True
     return render(request,'myapp/Signup.html')
 def upload(request):
- 
+    global ftype
     if request.method == 'POST':
         form = XrayImgForm(request.POST, request.FILES)
 
@@ -88,6 +87,7 @@ def upload(request):
                 tup=t[0]
                 a,b,c,d,e,f,g,h= tup.values()
             f=int(f)
+            ftype = fracture_list[f]
             response1 = requests.post(roboflow_url, params=params1, data=base64_image,headers=headers)
             if response1.status_code == 200:
                 return success(request, response1,fracture_list[f])
@@ -107,3 +107,9 @@ def success(request,response,f):
 def fail(request):
     last_uploaded_image = XrayImages.objects.last()
     return render(request, 'myapp/fail.html', {'fail': last_uploaded_image})
+
+def doctors(request):
+    print(ftype)
+    doctors = Doctor.objects.filter(speciality=ftype)
+    context = {'doctors': doctors}
+    return render(request, 'myapp/doctors.html', context)

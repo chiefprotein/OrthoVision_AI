@@ -9,6 +9,7 @@ urlpatterns = [
     path('upload/',views.upload,name="upload"),
     path('success/',views.success,name="success"),
     path('fail/',views.success,name="fail"),
+    path('doctors/',views.doctors,name="doctors"),
 ]
 if settings.DEBUG:
         urlpatterns += static(settings.MEDIA_URL,
