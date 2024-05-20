@@ -20,8 +20,7 @@ bash:
 git clone https://github.com/chiefprotein/OrthoVision_AI
 
 ## Install Dependencies
-bash: 
-cd Orthovision_ai/mini/orthovision_ai
+Install according to requirements.txt
 
 ## Run the application
 bash: 
@@ -41,4 +40,4 @@ python manage.py runserver
 This product is licensed by Rajagiri School Of Engineering And Technology
 
 
-Feel free to modify this README.md as needed for your project!
+
