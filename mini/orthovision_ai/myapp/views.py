@@ -64,7 +64,7 @@ def upload(request):
             roboflow_url = "https://detect.roboflow.com/sleep-oqgis/2"
 
             # Construct the query parameters dictionary
-            api_key = "pMkpzggFKSNgKPAKIxhz"
+            api_key = ""
             params = {
                 "api_key": api_key,
                 "format": "json"
